@@ -1,0 +1,44 @@
+<!--
+ * @Date: 2022-10-31 20:35:55
+ * @Author: 浩
+ * @LastEditors: 浩
+ * @FilePath: \react\2022-11-1\jsx语法规则.html
+-->
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .title {
+        color: orange;
+        width: 200px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container"></div>
+    <!-- react 核心库 -->
+    <script type="text/javascript" src="../lib/16.8/react.development.js"></script>
+    <!-- react-dom 用于支持 react 操作 dom -->
+    <script type="text/javascript" src="../lib/16.8/react-dom.development.js"></script>
+    <!-- babel 用于将jsx转成 -->
+    <script type="text/javascript" src="../lib/16.8/babel.min.js"></script>
+    <script type="text/babel">
+      const id = 'React'
+      const data = 'Hello react'
+      const VDOM = (
+       <div>
+        <h1 id={id} className="title">
+          <span style={{color:"red"}}>{data}</span>  
+        </h1>
+        <input type="text" /> 
+       </div>
+      )
+      ReactDOM.render(VDOM, document.getElementById("container"))
+   </script>
+  </body>
+</html>

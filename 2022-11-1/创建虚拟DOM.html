@@ -1,0 +1,47 @@
+<!--
+ * @Date: 2022-10-31 20:19:26
+ * @Author: 浩
+ * @LastEditors: 浩
+ * @FilePath: \react\2022-11-1\创建虚拟DOM.html
+-->
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="container"></div>
+    <!-- react 核心库 -->
+    <script type="text/javascript" src="../lib/16.8/react.development.js"></script>
+    <!-- react-dom 用于支持 react 操作 dom -->
+    <script type="text/javascript" src="../lib/16.8/react-dom.development.js"></script>
+    <!-- babel 用于将jsx转成 -->
+    <script type="text/javascript" src="../lib/16.8/babel.min.js"></script>
+    <script>
+      // 创建虚拟 dom
+      const VDOM = React.createElement(
+        'h1',
+        {id: 'title'},
+        React.createElement('span', {}, 'Hello,React')
+      );
+      ReactDOM.render(VDOM, document.getElementById("container"))
+    </script>
+    <script type="text/babel">
+      const VDOM2 = (
+        <h1 class="title">
+          <span>Hello, React</span>  
+        </h1>
+      )
+      console.log(VDOM)
+      console.log(VDOM instanceof Object)
+      /*
+        1、本质是 Object 对象
+        2、虚拟DOM 比较 “轻”
+      */
+    </script>
+  </body>
+</html>
