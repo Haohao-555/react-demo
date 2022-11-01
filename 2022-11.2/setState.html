@@ -1,0 +1,50 @@
+<!--
+ * @Date: 2022-11-01 20:45:12
+ * @Author: 浩
+ * @LastEditors: 浩
+ * @FilePath: \react\2022-11.2\setState.html
+-->
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="container"></div>
+    <!-- react 核心库 -->
+    <script type="text/javascript"  src="../lib/16.8/react.development.js"></script>
+    <!-- react-dom 用于支持 react 操作 dom -->
+    <script type="text/javascript" src="../lib/16.8/react-dom.development.js"></script>
+    <!-- babel 用于将jsx转成 -->
+    <script type="text/javascript" src="../lib/16.8/babel.min.js"></script>
+    <script type="text/babel">
+        class Demo extends React.Component {
+          // 构造器调用一次
+          constructor(props) {
+             super(props)
+             this.state = { isHot: false, wind: '微风' }
+             // 解决 changeState 的 this 指向
+             this.changeState = this.changeState.bind(this)
+          }
+          
+          // 渲染函数调用 1 + n 次 （1：初始渲染； n：状态更新的次数； ）
+          render() {
+            const {isHot, wind} = this.state;
+            return <h1 onClick={this.changeState}>今天天气很{isHot ? '炎热': '凉爽'}, {wind}</h1>
+          }
+          
+          // 挂载在 Demo 的原型对象上
+          changeState() {
+            console.log(this)  // Demo 的实例对象
+            const isHot = this.state.isHot
+            this.setState({ isHot: !isHot }) // 合并
+          }
+        }
+        ReactDOM.render(<Demo/>, document.getElementById("container"))
+    </script>
+  </body>
+</html>
