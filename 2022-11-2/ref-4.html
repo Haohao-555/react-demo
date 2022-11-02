@@ -1,0 +1,52 @@
+<!--
+ * @Date: 2022-11-02 20:37:48
+ * @Author: 浩
+ * @LastEditors: 浩
+ * @FilePath: \react\2022-11-2\ref-4.html
+-->
+<!--
+ * @Date: 2022-11-02 19:49:01
+ * @Author: 浩
+ * @LastEditors: 浩
+ * @FilePath: \react\2022-11-2\ref.html
+-->
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="container"></div>
+    <!-- react 核心库 -->
+    <script type="text/javascript" src="../lib/16.8/react.development.js"></script>
+    <!-- react-dom 用于支持 react 操作 dom -->
+    <script type="text/javascript" src="../lib/16.8/react-dom.development.js"></script>
+    <!-- babel 用于将jsx转成 -->
+    <script type="text/javascript" src="../lib/16.8/babel.min.js"></script>
+    <script type="text/babel">
+      class Demo extends React.Component {
+        /*
+          React.createRef调用后可以返回一个容器，该容器可以存储被ref所标识的节点
+          只能存储一个（专人专用）
+        */
+        myRef = React.createRef()
+        render() {
+          return (
+            <div>
+                <input ref={this.myRef} type="text" placeholder="点击按钮提示数据" />  
+                <button onClick={this.showData}>点我提示左侧数据</button>
+            </div>
+          )
+        }
+        showData = () => {
+           alert(this.myRef.current.value) 
+        }
+      }
+      ReactDOM.render(<Demo/>, document.getElementById("container"))
+    </script>
+  </body>
+</html>
