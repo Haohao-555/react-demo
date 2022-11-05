@@ -1,0 +1,63 @@
+<!--
+ * @Date: 2022-11-05 13:35:10
+ * @Author: 浩
+ * @LastEditors: 浩
+ * @FilePath: \react\2022-11-4\life-3.html
+-->
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="container"></div>
+    <!-- react 核心库 -->
+    <script type="text/javascript" src="../lib/17.0/react.development.js"></script>
+    <!-- react-dom 用于支持 react 操作 dom -->
+    <script type="text/javascript" src="../lib/17.0/react-dom.development.js"></script>
+    <!-- babel 用于将jsx转成 -->
+    <script type="text/javascript" src="../lib/17.0/babel.min.js"></script>
+    <script type="text/babel">
+    class NewsList extends React.Component{
+
+          state = {newsArr:[]}
+
+          componentDidMount(){
+            setInterval(() => {
+              //获取原状态
+              const {newsArr} = this.state
+              //模拟一条新闻
+              const news = '新闻'+ (newsArr.length+1)
+              //更新状态
+              this.setState({newsArr:[news,...newsArr]})
+            }, 1000);
+          }
+
+          getSnapshotBeforeUpdate(){
+            return this.refs.list.scrollHeight
+          }
+
+          componentDidUpdate(preProps,preState,height){
+            this.refs.list.scrollTop += this.refs.list.scrollHeight - height
+          }
+
+          render(){
+            return(
+              <div className="list" ref="list">
+                {
+                  this.state.newsArr.map((n,index)=>{
+                    return <div key={index} className="news">{n}</div>
+                  })
+                }
+              </div>
+            )
+          }
+    }
+    ReactDOM.render(<NewsList/>,document.getElementById('container'))
+    </script>
+  </body>
+</html>
