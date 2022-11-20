@@ -1,7 +1,10 @@
+## 一：前期准备
+
 页面 Home
 
 ```tsx
-const Home = () => {
+import React from 'react'
+const Home = () : React.FC => {
     return (
         <div>Home 页面</div>
     )
@@ -12,7 +15,8 @@ export default Home
 页面 About
 
 ```tsx
-const About = () => {
+import React from 'react'
+const About = () : React.FC => {
     return (
         <div>About 页面</div>
     )
@@ -20,11 +24,23 @@ const About = () => {
 export default About
 ```
 
+页面 detail
+
+```tsx
+import React from 'react'
+const detail = () : React.FC => {
+    return (
+        <div>detail 页面</div>
+    )
+}
+export default detail
+```
+
 <br/>
 
-### 一、v5路由配置
+## 二：v5 路由配置
 
-#### 1、基本使用
+### 1、基本使用
 
 * `src/router/App.tsx`
 
@@ -45,7 +61,7 @@ export default About
                        <Route exact path="/" component={<Redirect to="/home" />} />
                        <Route exact path="/home" component={Home}  />
                        <Route path="/about" component={About} />
-                       <Route path="detail/:id" component={Detail}>
+                       <Route path="/detail/:id" component={Detail}>
                        <Route render={() => <h1>404</h1>} />
                   </Switch>
               </BrowserRouter>
@@ -54,7 +70,7 @@ export default About
   }
   ```
 
-#### 2、路由跳转，页面获取路由信息
+### 2、获取路由信息
 
 ```tsx
 // localhost:3000/detail/12
@@ -74,15 +90,14 @@ export const Detail : React.FC<RouteComponentProps<MathParams>> = (props) => {
 }
 ```
 
-> 同理：类式组件也是通过 props 来传递路由信息
+> 同理：类组件也是**通过 props 来传递路由信息**
 
-#### 3、跨组件路由信息传递
+### 3、跨组件路由信息传递
 
 > 什么是跨组件路由信息传递，比如 `home 页面` 可以获取到路由信息，但 `header 组件`，应该如何获取到路由信息
 
 ```tsx
 import React from 'react'
-import {} from 'react-router-dom'
 import { Header } from '@/component/Header/index.tsx'
 export class Home extends React.Component {
     render() {
@@ -104,16 +119,17 @@ export const Header : React.FC = () => {
 }
 ```
 
-* 方式一：HOC 高阶组件（函数式或类式）
+#### 3.1、HOC 高阶组件
 
 ```tsx
 import React from 'react'
 import { withRouter } from 'react-router-dom'
 const HeaderComponent : React.FC = ({ history, location, match }) => {
-    // 得到路由信息
+    
     console.log(history);
     console.log(location);
     console.log(match);
+    
     return (
        <div className="header">
             <span className="home" onClick={() => {history.push("/home")}}>主页</span> 
@@ -123,7 +139,9 @@ const HeaderComponent : React.FC = ({ history, location, match }) => {
 export const Header = withRouter(HeaderComponent);
 ```
 
-* 方式二：hook 钩子（函数式组件）
+> **headerComponent 可以是函数式组件、类组件**
+
+#### 3.2、hook 钩子
 
 ```tsx
 import React from 'react'
@@ -145,9 +163,23 @@ export const header : React.FC = () => {
 }
 ```
 
-### 二、v6路由配置方式一
+> **header 只能是 函数式组件**
 
-#### 1、基本使用
+### 4、路由信息有哪些？
+
+* 对于页面而言可以获取 
+  * **history**
+  * **location**
+  * **match**
+* 对于跨组件可以获取
+  * 通过 HOC 高阶组件 处理后 **history**、 **location**、 **match**
+  * 通过 hook 函数 **useHistory()**、**useLocation()**、**useParams()**、**useRouteMatch()**
+
+<br/>
+
+## 三：v6路由配置方式一
+
+### 1、基本使用
 
 * `src/router/index.tsx`
 
@@ -176,7 +208,7 @@ export const header : React.FC = () => {
   export default baseRouter
   ```
 
-* `src/main.tsx`
+* `src/index.tsx`
 
   ```tsx
   import React from 'react'
@@ -214,12 +246,10 @@ export const header : React.FC = () => {
   ```
   
   <br/>
-  
-  路由跳转及跨组件路由信息传递见**v6路由跳转及路由信息获取**
 
-###  三、v6路由配置方式二
+##  四：v6路由配置方式二
 
-#### 1、基本使用
+### 1、基本使用
 
   * `src/router/index.tsx`
   
@@ -239,6 +269,7 @@ export const header : React.FC = () => {
         {component}
       </React.Suspense>
     )
+    
     const routes = [
        {
         path: '/',
@@ -254,9 +285,9 @@ export const header : React.FC = () => {
        }
     ]
     export default routes
-    ```
-
-  * `src/main.tsx`
+  ```
+  
+  * `src/index.tsx`
   
     > * `BrowserRouter`： History 模式
     > *  `HashRouter`：Hash 模式
@@ -265,7 +296,7 @@ export const header : React.FC = () => {
     import React from 'react'
     import ReactDOM from 'react-dom/client'
     import App from './App'
-    import { BrowserRouter } from 'react-router-dom'
+    import { BrowserRouter, HashRouter } from 'react-router-dom'
     
     ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       <React.StrictMode>
@@ -294,9 +325,9 @@ export const header : React.FC = () => {
     
     export default App
     ```
-  
 
-### 四、v6路由跳转及路由信息获取
+
+## 五、v6路由跳转及路由信息获取
 
 ```tsx
 import { useParams, useLocation, useNavigate } from 'react-router-dom'
@@ -316,7 +347,7 @@ function App() {
 }
 ```
 
-### 五、v5 与 v6 对比
+## 六：v5 与 v6 对比
 
 * v6 全面倒向了函数式组件，废除了`useHistory()`，取而代之的是`useNavigate()`
 * v5 将路由信息通过 props 的注入在页面中获取到路由信息
@@ -326,9 +357,9 @@ function App() {
 
 > 钩子函数是没法在类式组件中使用的，故在v6中，如果页面或组件是类式的，无法通过钩子函数来获取路由信息及路由跳转方法
 
-### 六、解决在v6中不支持类组件
+## 七：解决在 v6 中不支持类组件
 
-> 在v6中，是没有 withRouter 函数。但可以利用该思想，将类式组件封装成
+> 在v6中，是没有 withRouter 函数。但可以利用该思想，将类式组件封装成高阶组件
 
 * `src/helpers/withRoters.tsx`
 
