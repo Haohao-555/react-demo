@@ -339,5 +339,113 @@ const Header : React.FC = () => {
 }
 ```
 
+<br/>
 
+### 六 redux 中包含多个 Reducer
+
+```ts
+import { createStore, combineReducers } from "redux"
+// 数据处理逻辑
+import languageReducer from './languageReducer'
+import productReducer from './productReducer'
+const rootReducer = combineReducers({
+    language: languageReducer,
+    product: productReducer
+})
+const store = createStore(rootReducer)
+
+// 通过动态获取 store 数据仓库中的数据，并读取变量类型
+export type RootState = ReturnType<typeof store.getState>
+                                   
+export default store
+```
+
+```tsx
+// 使用
+  const languageList = useSelector((state : RootState) => state.language.languageList)
+```
+
+<br/>
+
+### 七  redux 中间件 redux-thunk 
+
+> npm install redux-thunk
+>
+> 作用：将 api 请求封装到 redux action 中，页面只需要通过 action 即可获取到数据
+
+```ts
+import { createStore, combineReducers, applyMiddleware } from "redux"
+// 数据处理逻辑
+import languageReducer from './languageReducer'
+import productReducer from './productReducer'
+import thunk from 'redux-thunk'
+const rootReducer = combineReducers({
+    language: languageReducer,
+    product: productReducer
+})
+const store = createStore(rootReducer, applyMiddleware(thunk))
+
+// 通过动态获取 store 数据仓库中的数据，并读取变量类型
+export type RootState = ReturnType<typeof store.getState>
+                                   
+export default store
+```
+
+创建 action
+
+```ts
+import { ThunkAction } from 'redux-thunk'
+import { RootState } from './store'
+import axios from 'axios'
+export getDataActionCreator = () : ThunkAction<viod, RootState, unknown,  any> => async(dispatch, getState) {
+     try {
+         // 获取数据
+         const { data } = await axios.get('localhost:3000/api')
+     } catch(error) {
+         // 错误处理
+     }
+}
+```
+
+页面
+
+```tsx
+import React from 'react'
+import { getDataActionCreator } from './getDataActionCreator'
+
+import { RootState } from "@/src/redux/store"
+
+import { connect } from 'react-redux'
+import { Dispatch } from 'redux'
+
+// 将 store 中的 数据注入到 props
+const mapStateToProps = (state: RootState) => {
+    return {
+        language: state.language,
+        languageList: state.languageList
+    }
+}
+
+// 将 dispatch 导入到 props 
+const mapDispatchToProps = (dispatch: Dispatch) => {
+    return {
+       getData: () => {
+           dispatch(getDataActionCreator())
+       }
+    }
+}
+    
+class Home extends React.Component<PropsType> {
+    componentDidMount() {
+        this.props.getData()
+    }
+    render() {
+        return (
+            <div></div>
+        )
+    } 
+}
+
+export const Header = connect(mapStateToProps, mapDispatchToProps)(Home)
+```
 
