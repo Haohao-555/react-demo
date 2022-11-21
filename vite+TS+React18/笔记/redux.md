@@ -449,3 +449,47 @@ class Home extends React.Component<PropsType> {
 export const Header = connect(mapStateToProps, mapDispatchToProps)(Home)
 ```
 
+<br/>
+
+### 八 自定义中间件
+
+> 捕获所有 action，打印日志
+
+```tsx
+// redux 中间件公式
+const middleware = (store) => (next) => (action) => {}
+```
+
+redux/middlewares/actionLog.ts
+
+```ts
+import { Middleware } from 'redux'
+export const actionLog = (store) => (next) => (action) => {
+    console.log('state 当前', store.getState())
+    console.log('被拦截的 action', action)
+    next(action) // action 分发
+    console.log('state 更新', store.getState())
+}
+```
+
+redux/store
+
+```ts
+import { actionLog } './middlewares/actionLog.ts'
+import { createStore, combineReducers, applyMiddleware } from "redux"
+// 数据处理逻辑
+import languageReducer from './languageReducer'
+import productReducer from './productReducer'
+import thunk from 'redux-thunk'
+const rootReducer = combineReducers({
+    language: languageReducer,
+    product: productReducer
+})
+const store = createStore(rootReducer, applyMiddleware(thunk, actionLog))
+
+// 通过动态获取 store 数据仓库中的数据，并读取变量类型
+export type RootState = ReturnType<typeof store.getState>
+                                   
+export default store
+```
+
